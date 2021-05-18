@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+	  "target": "es5",
+	  "allowJs": true,
+	  "removeComments": true,
+	  "rootDir": "src",
+	  "outDir": "build"
+	},
+	"include": [
+	  "src/api.ts"
+	],
+	"watchOptions": {
+	  "watchFile": "useFsEvents",
+	  "watchDirectory": "useFsEvents",
+	  "fallbackPolling": "dynamicPriority"
+	}
+  }
