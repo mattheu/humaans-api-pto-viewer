@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+
 require( 'dotenv' ).config();
+
 const prettyjson = require( 'prettyjson' );
 const yargs = require( 'yargs' );
 
@@ -62,10 +64,8 @@ async function getTimeAwayPolicies() {
 
 /**
  * Get person data for the currently authenticated user.
- *
- * @param {object} argv Args.
  */
-async function getMe( argv ) {
+async function getMe() {
 	log( await api.fetchMe() );
 }
 

@@ -12,14 +12,24 @@
 
     <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/build/app.css">
     <script src="build/app.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>A Dream of the Future</h1>
+      <h1>Humaans.io Holiday Dashboard</h1>
+      <p>Get an overview of planned time off as tracked in <a href="https://humaans.io/">Humaans.io</a></p>
     </header>
 
-    <footer>Made with <a href="https://glitch.com">Glitch</a>!</footer>
+    <main id="app"></main>
+
+    <footer>
+      <p>Made with <a href="https://glitch.com">Glitch</a>!</p>
+      <ul>
+        <li><a href="/api/pto/me"><code>/api/pto/me</code></a></li>
+        <li><a href="/api/pto/:id"><code>/api/pto/:id</code></a></li>
+      </ul>
+    </footer>
 
     <!-- include the Glitch button to show what the webpage is about and
           to make it easier for folks to view source and remix -->

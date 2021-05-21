@@ -1,0 +1,52 @@
+html {
+	background: #333;
+	font-size: 62.5%;
+}
+
+body {
+	margin: 0;
+	font-family: menlo;
+	color: #333;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: #333;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+	monospace;
+}
+
+*  {
+	box-sizing: border-box;
+}
+
+.app {
+	display: grid;
+	grid-template-columns: repeat( 3, 1fr );
+	max-width: 1440px;
+	margin: 1.5rem;
+	grid-gap: 2em;
+}
+
+.app h1 {
+	color: white;
+	margin: 0;
+	grid-column: 1 / 4;
+}
+
+.app .cal {
+	grid-column: 1 / 4;
+}
+
+.app .summary-chart {
+	grid-column: 1 / 2;
+}
+
+.app .summary-chart + .summary-chart {
+	grid-column: 2 / 3;
+}
+
+.app .summary-chart + .summary-chart + .summary-chart {
+	grid-column: 3 / 4;
+}

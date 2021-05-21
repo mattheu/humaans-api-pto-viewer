@@ -1,4 +1,13 @@
 {
 	"extends": "@humanmade",
-	"ignorePatterns": ["build/*.js"]
+	"ignorePatterns": ["build/*.js"],
+	"overrides": [
+		{
+		  "files": [ "**/*.ts", "**/*.tsx" ],
+		  "rules": {
+			"jsdoc/require-returns": [ 0 ],
+			"jsdoc/require-param": [ 0 ]
+		  }
+		}
+	  ]
   }

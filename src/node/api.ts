@@ -1,9 +1,19 @@
-const nodeFetch = require('node-fetch');
-const { addQueryArgs } = require('@wordpress/url');
-const dateFns = require('date-fns');
+require( 'dotenv' ).config();
+
+// const dateFns = require( 'date-fns' );
+const nodeFetch = require( 'node-fetch' );
+
+const { addQueryArgs } = require( '@wordpress/url' );
 
 const apiBase = 'https://app.humaans.io/api';
-const dateFormat = 'yyyy-MM-dd';
+// const dateFormat = 'yyyy-MM-dd';
+
+interface DateInterval {
+	// start: Date,
+	// end: Date,
+	start: string,
+	end: string,
+}
 
 interface Person {
 	name?: string;
@@ -11,7 +21,8 @@ interface Person {
 }
 
 interface TimeOffBreakdown {
-	date?: Date;
+	// date?: Date;
+	date?: string;
 	isFull: boolean,
 	period?: 'full' | 'am' | 'pm';
 }
@@ -34,16 +45,8 @@ interface TimeAwayPeriod {
 	upcoming: number;
 }
 
-interface DateInterval {
-	start: Date,
-	end: Date,
-}
-
 /**
  * Convert raw API data to Person object.
- *
- * @param rawData Raw data from API.
- * @returns Person
  */
 function parsePerson( rawData: any ) : Person {
 	return {
@@ -54,23 +57,18 @@ function parsePerson( rawData: any ) : Person {
 
 /**
  * Convert raw API data to breakdown object.
- *
- * @param rawData Raw data from API.
- * @returns TimeOffBreakdown
  */
 function parseBreakdown( rawData: any ) : TimeOffBreakdown {
 	return {
-		date: dateFns.parse( rawData.date, dateFormat, new Date() ),
+		// date: dateFns.parse( rawData.date, dateFormat, new Date() ),
+		date: rawData.date,
 		period: rawData.period,
 		isFull: rawData.period === 'full',
-	}
+	};
 }
 
 /**
  * Convert raw API data to TimeOff object.
- *
- * @param rawData Raw data from API.
- * @returns TimeOff
  */
 function parseTimeOff( rawData: any ) : TimeOff {
 	return {
@@ -79,8 +77,10 @@ function parseTimeOff( rawData: any ) : TimeOff {
 		type: rawData.type || '',
 		days: rawData.days || '',
 		period: {
-			start: dateFns.parse( rawData.startDate, dateFormat, new Date() ),
-			end: dateFns.parse( rawData.endDate, dateFormat, new Date() ),
+			// start: dateFns.parse( rawData.startDate, dateFormat, new Date() ),
+			// end: dateFns.parse( rawData.endDate, dateFormat, new Date() ),
+			start: rawData.startDate,
+			end: rawData.endDate,
 		},
 		breakdown: rawData.breakdown.map( parseBreakdown ),
 	};
@@ -88,9 +88,6 @@ function parseTimeOff( rawData: any ) : TimeOff {
 
 /**
  * Convert raw API data to TimeAwayPeriod object.
- *
- * @param rawData Raw data from API.
- * @returns TimeAwayPeriod
  */
 function parseTimeAwayPeriod( rawData: any ) : TimeAwayPeriod {
 	return {
@@ -100,47 +97,57 @@ function parseTimeAwayPeriod( rawData: any ) : TimeAwayPeriod {
 		used: parseFloat( rawData.ptoUsed ),
 		upcoming: parseFloat( rawData.ptoUpcoming ),
 		period: {
-			start: dateFns.parse( rawData.startDate, dateFormat, new Date() ),
-			end: dateFns.parse( rawData.endDate, dateFormat, new Date() ),
+			// start: dateFns.parse( rawData.startDate, dateFormat, new Date() ),
+			// end: dateFns.parse( rawData.endDate, dateFormat, new Date() ),
+			start: rawData.startDate,
+			end: rawData.endDate,
 		},
-	}
+	};
 }
 
+/**
+ * Fetch currently authenticated person, the owner of API key.
+ */
 async function fetchMe() : Promise<Person> {
 	return parsePerson( await getResourceJSON( 'me' ) );
 }
 
+/**
+ * Fetch a single person by ID.
+ */
 async function fetchPerson( id: string ) : Promise<Person> {
 	return parsePerson( await getResourceJSON( `people/${ id }` ) );
 }
 
 /**
  * Fetch time off for a user for given period.
- *
- * @param personId ID of person.
- * @param interval DateInterval
- * @returns Promise<TimeOff[]>
  */
 async function fetchTimeOff( personId: string, type?: String, interval?: DateInterval ) : Promise<TimeOff[]> {
 	const args : any = {
-		personId,
-	}
+		personId: personId,
+	};
 
 	if ( type ) {
 		args['type'] = type;
 	}
 
 	if ( interval ) {
-		args['startDate[$gte]'] = dateFns.format( interval.start, dateFormat );
-		args['endDate[$lte]'] = dateFns.format( interval.end, dateFormat );
+		// args['startDate[$gte]'] = dateFns.format( interval.start, dateFormat );
+		// args['endDate[$lte]'] = dateFns.format( interval.end, dateFormat );
+		args['startDate[$gte]'] = interval.start;
+		args['endDate[$lte]'] = interval.end;
 	}
-
-	console.log( addQueryArgs( 'time-away', args ) );
 
 	const json = await getResourceJSON( addQueryArgs( 'time-away', args ) );
 	return json.data.map( parseTimeOff );
 }
 
+/**
+ * Fetch the time away period object for the current period for a single user.
+ *
+ * This gives data on that persons holiday allowance for the current year.
+ * As well as a summary on how many days they have taken and booked.
+ */
 async function fetchCurrentTimeAwayPeriodForPerson( id: string ) : Promise<any> {
 	const json = await getResourceJSON( addQueryArgs( 'time-away-periods', {
 		personId: id,
@@ -149,10 +156,15 @@ async function fetchCurrentTimeAwayPeriodForPerson( id: string ) : Promise<any> 
 	return parseTimeAwayPeriod( json.data[0] );
 }
 
+/**
+ * Make GET request to a resource by bath and return returns parsed JSON.
+ *
+ * Handles authentication based on token stored in environment variable.
+ */
 async function getResourceJSON( path: String ) {
 	const opts = {
 		headers: {
-			'Authorization': `Bearer ${ process.env.HUMAANS_API_TOKEN }`
+			'Authorization': `Bearer ${ process.env.HUMAANS_API_TOKEN }`,
 		},
 	};
 
@@ -161,7 +173,8 @@ async function getResourceJSON( path: String ) {
 	if ( response.status === 200 ) {
 		return await response.json();
 	} else {
-		throw new Error( 'Request failed' );
+		console.log( opts );
+		throw new Error( `Request failed: ${apiBase}/${path}` );
 	}
 }
 

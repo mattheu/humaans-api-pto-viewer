@@ -1,17 +1,20 @@
 {
 	"compilerOptions": {
-	  "target": "es5",
-	  "allowJs": true,
-	  "removeComments": true,
-	  "rootDir": "src",
-	  "outDir": "build"
+	  "target": "ES2015",
+	  "strict": true,
+	  "skipLibCheck": true,
+	  "forceConsistentCasingInFileNames": true,
+	  "sourceMap": true,
+	  "esModuleInterop": true,
+	  "jsx": "react",
+	  "module": "commonjs",
+	  "moduleResolution": "node",
+	  "allowSyntheticDefaultImports": true,
+	  "noImplicitReturns": true,
+	  "noImplicitThis": true,
+	  "noImplicitAny": true,
+	  "strictNullChecks": true
 	},
-	"include": [
-	  "src/api.ts"
-	],
-	"watchOptions": {
-	  "watchFile": "useFsEvents",
-	  "watchDirectory": "useFsEvents",
-	  "fallbackPolling": "dynamicPriority"
-	}
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"display": "Recommended"
   }
