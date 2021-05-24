@@ -30,10 +30,13 @@ export interface TimeAway {
 export interface Person {
 	id: string,
 	name: string,
+	directReports: Array<string>,
 }
 
 export interface AppState {
-	user: Person | null,
-	period: TimeAwayPeriod | null,
+	people: Array<Person>,
+	periods: Array<TimeAwayPeriod>,
 	timeAway: Array<TimeAway>,
+	apiKey: string | null,
+	selectedUserId: string | null,
 }

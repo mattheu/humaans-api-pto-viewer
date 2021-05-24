@@ -171,10 +171,14 @@ function Month( {
 	);
 }
 
+interface CalendarProps {
+	timeAway: Array<TimeAway>,
+}
+
 /**
- *
+ * Calendar Component
  */
-function Calendar( { user, period, timeAway } : AppState ) : JSX.Element {
+function Calendar( { timeAway } : CalendarProps ) : JSX.Element {
 	const yearStartDate = getYearStart();
 
 	const months = Array.from( { length: 12 }, ( v, i ) => {
@@ -212,7 +216,15 @@ function Calendar( { user, period, timeAway } : AppState ) : JSX.Element {
 			<div className="cal__header">
 				<div></div>
 				{ Array.from( { length: 6 } ).map( ( v, i ) => (
-					<div key={ `week-${ i }` }>Mon</div>
+					<div key={ `week-${ i }` }>
+						<span>M</span>
+						<span>T</span>
+						<span>W</span>
+						<span>T</span>
+						<span>F</span>
+						<span>S</span>
+						<span>S</span>
+					</div>
 				) ) }
 			</div>
 			<>

@@ -17,6 +17,10 @@
 	line-height: 1.1;
   }
 
+  header {
+	  margin: 1.5rem;
+  }
+
   form {
 	background-color: #eee;
 	display: grid;
@@ -50,7 +54,5 @@
   }
 
   footer {
-	margin-top: 3em;
-	padding-top: 1.5em;
-	border-top: 1px solid lightgrey;
+	margin: 1.5rem;
   }

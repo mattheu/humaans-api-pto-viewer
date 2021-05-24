@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start:server": "node ./server.js",
+    "start:webpack": "webpack --config=.config/webpack.config.prod.js --watch",
     "build:webpack": "webpack --config=.config/webpack.config.prod.js",
     "build:typescript": "tsc --project tsconfig.node.json",
     "build": "npm run build:webpack && npm run build:typescript"

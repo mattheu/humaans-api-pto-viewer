@@ -1,5 +1,4 @@
 html {
-	background: #333;
 	font-size: 62.5%;
 }
 
@@ -9,11 +8,10 @@ body {
 	color: #333;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	background: #333;
 }
 
 code {
-	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+	font-family: Menlo, Monaco, Consolas, 'Courier New',
 	monospace;
 }
 
@@ -22,8 +20,8 @@ code {
 }
 
 .app {
-	display: grid;
-	grid-template-columns: repeat( 3, 1fr );
+	/* display: grid; */
+	/* grid-template-columns: repeat( 3, 1fr ); */
 	max-width: 1440px;
 	margin: 1.5rem;
 	grid-gap: 2em;

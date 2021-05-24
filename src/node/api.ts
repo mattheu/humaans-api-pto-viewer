@@ -16,8 +16,9 @@ interface DateInterval {
 }
 
 interface Person {
-	name?: string;
-	id?: string;
+	name: string;
+	id: string;
+	directReports?: Array<string>;
 }
 
 interface TimeOffBreakdown {
@@ -52,6 +53,7 @@ function parsePerson( rawData: any ) : Person {
 	return {
 		name: `${ rawData.firstName || '' } ${ rawData.lastName || '' }`,
 		id: rawData.id || '',
+		directReports: rawData?.directReports || [],
 	};
 }
 
@@ -108,37 +110,29 @@ function parseTimeAwayPeriod( rawData: any ) : TimeAwayPeriod {
 /**
  * Fetch currently authenticated person, the owner of API key.
  */
-async function fetchMe() : Promise<Person> {
-	return parsePerson( await getResourceJSON( 'me' ) );
+async function fetchMe( key: string ) : Promise<Person> {
+	return parsePerson( await getResourceJSON( 'me', key ) );
 }
 
 /**
  * Fetch a single person by ID.
  */
-async function fetchPerson( id: string ) : Promise<Person> {
-	return parsePerson( await getResourceJSON( `people/${ id }` ) );
+async function fetchPerson( id: string, key: string ) : Promise<Person> {
+	return parsePerson( await getResourceJSON( `people/${ id }`, key ) );
 }
 
 /**
  * Fetch time off for a user for given period.
  */
-async function fetchTimeOff( personId: string, type?: String, interval?: DateInterval ) : Promise<TimeOff[]> {
+async function fetchTimeOff( personId: string, type: String, interval: DateInterval, key: string ) : Promise<TimeOff[]> {
 	const args : any = {
 		personId: personId,
+		type: type,
+		'startDate[$gte]': interval.start,
+		'endDate[$lte]': interval.end,
 	};
 
-	if ( type ) {
-		args['type'] = type;
-	}
-
-	if ( interval ) {
-		// args['startDate[$gte]'] = dateFns.format( interval.start, dateFormat );
-		// args['endDate[$lte]'] = dateFns.format( interval.end, dateFormat );
-		args['startDate[$gte]'] = interval.start;
-		args['endDate[$lte]'] = interval.end;
-	}
-
-	const json = await getResourceJSON( addQueryArgs( 'time-away', args ) );
+	const json = await getResourceJSON( addQueryArgs( 'time-away', args ), key );
 	return json.data.map( parseTimeOff );
 }
 
@@ -148,11 +142,11 @@ async function fetchTimeOff( personId: string, type?: String, interval?: DateInt
  * This gives data on that persons holiday allowance for the current year.
  * As well as a summary on how many days they have taken and booked.
  */
-async function fetchCurrentTimeAwayPeriodForPerson( id: string ) : Promise<any> {
+async function fetchCurrentTimeAwayPeriodForPerson( id: string, key: string ) : Promise<any> {
 	const json = await getResourceJSON( addQueryArgs( 'time-away-periods', {
 		personId: id,
 		isCurrentPeriod: true,
-	} ) );
+	} ), key );
 	return parseTimeAwayPeriod( json.data[0] );
 }
 
@@ -161,10 +155,11 @@ async function fetchCurrentTimeAwayPeriodForPerson( id: string ) : Promise<any> 
  *
  * Handles authentication based on token stored in environment variable.
  */
-async function getResourceJSON( path: String ) {
+async function getResourceJSON( path: String, key: string ) {
+	// process.env.HUMAANS_API_TOKEN//
 	const opts = {
 		headers: {
-			'Authorization': `Bearer ${ process.env.HUMAANS_API_TOKEN }`,
+			'Authorization': `Bearer ${ key }`,
 		},
 	};
 

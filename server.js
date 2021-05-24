@@ -16,10 +16,15 @@ app.get( '/', ( request, response ) => {
 } );
 
 app.get( '/api/pto/me', async ( req, res ) => {
+	if ( ! req.query.key ) {
+		res.sendStatus( 500 );
+		return;
+	}
+
 	try {
-		const person = await api.fetchMe();
-		const period = await api.fetchCurrentTimeAwayPeriodForPerson( person.id );
-		const timeAway = await api.fetchTimeOff( person.id, 'pto', period.period );
+		const person = await api.fetchMe( req.query.key );
+		const period = await api.fetchCurrentTimeAwayPeriodForPerson( person.id, req.query.key );
+		const timeAway = await api.fetchTimeOff( person.id, 'pto', period.period, req.query.key );
 
 		res.json( {
 			person,
@@ -35,15 +40,15 @@ app.get( '/api/pto/me', async ( req, res ) => {
 } );
 
 app.get( '/api/pto/:personId', async ( req, res ) => {
-	if ( ! req.params.personId ) {
+	if ( ! req.params.personId || ! req.query.key ) {
 		res.sendStatus( 500 );
 		return;
 	}
 
 	try {
-		const person = await api.fetchPerson( req.params.personId );
-		const period = await api.fetchCurrentTimeAwayPeriodForPerson( person.id );
-		const timeAway = await api.fetchTimeOff( req.params.personId, 'pto', period.period );
+		const person = await api.fetchPerson( req.params.personId, req.query.key );
+		const period = await api.fetchCurrentTimeAwayPeriodForPerson( person.id, req.query.key );
+		const timeAway = await api.fetchTimeOff( req.params.personId, 'pto', period.period, req.query.key );
 
 		res.json( {
 			person,

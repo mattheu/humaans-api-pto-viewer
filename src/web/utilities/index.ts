@@ -55,8 +55,8 @@ export function prepareTimeAway( data : any ) : TimeAway {
 	};
 
 	return {
-		id: data.days,
-		personId: data.days,
+		id: data.id,
+		personId: data.personId,
 		days: data.days,
 		breakdown: data.breakdown.map( prepareTimeAwayBreakdown ),
 		type: data.type,
@@ -82,13 +82,3 @@ export function prepareTimeAwayPeriod( data : any ) : TimeAwayPeriod {
 		period,
 	};
 }
-
-// export function prepareBreakdown( breakdownItem ) : TimeAwayBreakdown {
-// 	const date = parse( breakdownItem.date, apiDateFormat, startOfDay( new Date() ) );
-
-// 	return {
-// 	  date,
-// 	  kind: breakdownItem.kind || 'weekday',
-// 	  period: breakdownItem.period || 'full',
-// 	};
-// }
