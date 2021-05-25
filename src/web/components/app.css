@@ -25,6 +25,7 @@ code {
 	max-width: 1440px;
 	margin: 1.5rem;
 	grid-gap: 2em;
+	font-size: 1.4rem;
 }
 
 .app h1 {
@@ -47,4 +48,21 @@ code {
 
 .app .summary-chart + .summary-chart + .summary-chart {
 	grid-column: 3 / 4;
+}
+
+
+table {
+	border-collapse: collapse;
+	margin: 1.5rem 0;
+	font-size: 1rem;
+}
+
+th {
+	font-weight: bold;
+	text-align: left;
+}
+
+th, td {
+	border: 1px solid rgba( 0,0,0,0.2 );
+	padding: .5rem;
 }

@@ -12,13 +12,21 @@
 
     <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
     <link rel="stylesheet" href="/style.css">
+
     <link rel="stylesheet" href="/build/app.css">
     <script src="build/app.js" defer></script>
+
+    <script src="http://localhost:8080/calendar/app.js" defer></script>
   </head>
   <body>
     <header>
-      <h1>Humaans.io Holiday Dashboard</h1>
-      <p>Get an overview of planned time off as tracked in <a href="https://humaans.io/">Humaans.io</a></p>
+      <h1>Holiday Report Card</h1>
+      <p>Status report of time off for the current holiday year. Generated using data from the <a href="https://humaans.io/">Humaans.io</a> API</p>
+      <p>Note the following advice:</p>
+      <ul>
+        <li>You must take at least 15 days by the end of September.</li>
+        <li>Guidance from the handbook is to take 5 days per quarter.</li>
+      </ul>
     </header>
 
     <main id="app" class="app"></main>

@@ -3,15 +3,17 @@ import React, { useEffect, useReducer, useRef } from 'react';
 import { AppState, Person } from '../types';
 import { prepareTimeAway, prepareTimeAwayPeriod } from '../utilities';
 
-import Calendar from './calendar';
-
 import './app.css';
+
+import Calendar from './calendar';
+import Graphs from './graphs';
+import Summary from './summary';
 
 const initialState : AppState = {
 	people: [],
 	periods: [],
 	timeAway: [],
-	apiKey: null,
+	apiKey: window.sessionStorage.getItem( 'apiKey' ) || null,
 	selectedUserId: null,
 };
 
@@ -58,56 +60,6 @@ function removeItemsFromArrayByIds( a : Array<any>, ids : Array<string> ) : Arra
 function pluckIds( a: Array<any> ) : Array<string> {
 	return a.map( ( i : any ) : string => i?.id );
 }
-
-/**
- * Update the app state from a person response.
- */
-function getUpdatedAppStateFromResponse( currentState : AppState, responseData : any ) : AppState {
-	// Find the ids for all objects we have new data for.
-	// These need removing from the app state before adding the new data.
-	const peopleIdsToRemove = [ responseData?.person?.id ];
-	const periodIdsToRemove = [ responseData?.currentTimeAwayPeriod?.id ];
-	const timeAwayIdsToRemove = ( responseData?.ptoInCurrentPeriod || [] )
-		.map( ( timeAwayData : any ) : string => timeAwayData?.id );
-
-	// console.log( {
-	// 	peopleIdsToRemove,
-	// 	responseData,
-	// 	people: currentState.people,
-	// 	new: [
-	// 		// ...removeItemsFromArrayByIds( currentState.people, peopleIdsToRemove ),
-	// 		responseData.person,
-	// 	],
-	// } );
-
-	// console.log( {
-	// 	...currentState,
-	// 	people: [
-	// 		...currentState.people,
-	// 		responseData.person,
-	// 	],
-	// } );
-
-	return {
-		...currentState,
-		people: [
-			...currentState.people,
-			...removeItemsFromArrayByIds( currentState.people, peopleIdsToRemove ),
-			responseData.person,
-		],
-		// periods: [
-		// 	...currentState.periods,
-		// 	// ...removeItemsFromArrayByIds( currentState.periods, periodIdsToRemove ),
-		// 	prepareTimeAwayPeriod( responseData.currentTimeAwayPeriod ),
-		// ],
-		// timeAway: [
-		// 	...currentState.timeAway,
-		// 	// ...removeItemsFromArrayByIds( currentState.timeAway, timeAwayIdsToRemove ),
-		// 	...responseData.ptoInCurrentPeriod.map( prepareTimeAway ),
-		// ],
-	};
-}
-
 interface Action {
 	type: string,
 	payload: any,
@@ -148,6 +100,7 @@ function reducer( state: AppState, action: Action ) : AppState {
 				...handleArrayOfItemsAction( 'timeAway', action.payload, state.timeAway ),
 			};
 		case 'updateApiKey' :
+			sessionStorage.setItem( 'apiKey', action.payload );
 			return {
 				...state,
 				apiKey: action.payload,
@@ -170,6 +123,7 @@ function App() : JSX.Element {
 
 	const selectedUser = appState.selectedUserId ? appState.people.find( p => p.id === appState.selectedUserId ) : null;
 	const period = appState.selectedUserId ? appState.periods.find( p => p.personId === appState.selectedUserId ) : null;
+	const timeAway = appState.timeAway.filter( t => t.personId === ( selectedUser?.id || '' ) );
 
 	/**
 	 * Handle the PTO response, and dispatch actions to update data.
@@ -259,20 +213,11 @@ function App() : JSX.Element {
 				</select>
 			) }
 
-			{ selectedUser && (
+			{ ( selectedUser && period ) && (
 				<>
-					<p>
-						<b>User:</b> { selectedUser.name } <br />
-
-						{ period && (
-							<>
-								<b>Days Used:</b> { period.used } <br />
-								<b>Days Upcoming:</b> { period.upcoming } <br />
-								<b>Days Remaining:</b> { period.allowance - period.upcoming - period.used } <br />
-							</>
-						) }
-					</p>
-					<Calendar timeAway={ appState.timeAway.filter( t => t.personId === selectedUser.id ) } />
+					<Summary currentPeriod={ period } timeAway={ timeAway } user={ selectedUser } />
+					<Calendar timeAway={ timeAway } />
+					<Graphs currentPeriod={ period } timeAway={ timeAway } />
 				</>
 			) }
 

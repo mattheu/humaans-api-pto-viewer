@@ -42,6 +42,7 @@ export function prepareTimeAwayBreakdown( data : any ) : TimeAwayBreakdown {
 		date: parse( data.date, apiDateFormat, new Date() ),
 		isFull: !! data.isFull,
 		period: data.period,
+		kind: data.kind,
 	};
 }
 
@@ -79,6 +80,8 @@ export function prepareTimeAwayPeriod( data : any ) : TimeAwayPeriod {
 		allowance: data.allowance,
 		upcoming: data.upcoming,
 		used: data.used,
+		maxCarryOver: data.maxCarryOver,
+		carriedOver: data.carriedOver,
 		period,
 	};
 }

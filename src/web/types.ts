@@ -10,12 +10,15 @@ export interface TimeAwayPeriod {
 	personId: string,
 	upcoming: number,
 	used: number,
+	carriedOver: number,
+	maxCarryOver: number,
 }
 
 export interface TimeAwayBreakdown {
-	date?: Date;
+	date: Date;
 	isFull: boolean,
-	period?: 'full' | 'am' | 'pm';
+	period: 'full' | 'am' | 'pm';
+	kind?: string,
 }
 
 export interface TimeAway {
@@ -24,7 +27,7 @@ export interface TimeAway {
 	days: number;
 	type: string;
 	period: DateInterval,
-	breakdown?: Array<TimeAwayBreakdown>;
+	breakdown: Array<TimeAwayBreakdown>;
 }
 
 export interface Person {

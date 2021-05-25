@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { min, max, isBefore, areIntervalsOverlapping, isWeekend, addDays, getDaysInMonth, startOfWeek, eachDayOfInterval, isSameDay, endOfWeek, endOfMonth, format, startOfMonth, addMonths, differenceInDays, isWithinInterval, isEqual } from 'date-fns';
 import React, { Fragment } from 'react';
 
-import { TimeAway, AppState } from '../types';
+import { TimeAway } from '../types';
 import { getYearStart } from '../utilities';
 
 import './calendar.css';

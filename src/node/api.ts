@@ -26,6 +26,7 @@ interface TimeOffBreakdown {
 	date?: string;
 	isFull: boolean,
 	period?: 'full' | 'am' | 'pm';
+	kind?: string,
 }
 
 interface TimeOff {
@@ -42,8 +43,10 @@ interface TimeAwayPeriod {
 	personId: string;
 	period: DateInterval,
 	allowance: number;
+	carriedOver: number,
 	used: number;
 	upcoming: number;
+	maxCarryOver: number,
 }
 
 /**
@@ -66,6 +69,7 @@ function parseBreakdown( rawData: any ) : TimeOffBreakdown {
 		date: rawData.date,
 		period: rawData.period,
 		isFull: rawData.period === 'full',
+		kind: rawData.kind || '',
 	};
 }
 
@@ -98,6 +102,8 @@ function parseTimeAwayPeriod( rawData: any ) : TimeAwayPeriod {
 		allowance: parseFloat( rawData.allowance ),
 		used: parseFloat( rawData.ptoUsed ),
 		upcoming: parseFloat( rawData.ptoUpcoming ),
+		carriedOver: parseFloat( rawData.ptoCarriedOver ),
+		maxCarryOver: parseFloat( rawData.timeAwayAllocation.timeAwayPolicy.maxPtoCarryOver ),
 		period: {
 			// start: dateFns.parse( rawData.startDate, dateFormat, new Date() ),
 			// end: dateFns.parse( rawData.endDate, dateFormat, new Date() ),

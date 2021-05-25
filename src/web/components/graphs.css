@@ -1,0 +1,30 @@
+.quarterly-report {
+	display: grid;
+	grid-template-columns: repeat( 3, 1fr );
+	grid-column-gap: 1.5rem;
+	margin: 1.5rem 0;
+}
+
+.quarterly-report
+
+.summary-chart {
+	padding: 1.5rem;
+	margin-top: 0;
+	display: grid;
+	grid-template-columns: 1fr;
+	background: white;
+	clear: both;
+	border-radius: 1px;
+}
+
+.summary-chart h2 {
+	text-align: center;
+	margin-top: .5em;
+	margin-bottom: -1.5em;
+}
+
+.summary-chart .caption {
+	text-align: center;
+	/* max-width: 80%; */
+	margin: auto;
+}

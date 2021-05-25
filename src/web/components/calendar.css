@@ -73,8 +73,6 @@
 	line-height: 1.5rem;
 	text-align: center;
 	margin-right: -1px;
-	/* min-height: 50px; */
-	/* min-height: 35px; */
   }
 
   .cal__day--is-pad {
@@ -107,7 +105,7 @@
 	left: -1px;
 	right: -1px;
 	bottom: -1px;
-	border: 1px solid rgba(59, 160, 44, 0.5  );
+	border: 1px solid rgba(59, 160, 44, 0.5 );
 	pointer-events: none;
   }
 
@@ -127,7 +125,7 @@
   }
 
   .time-away__item {
-	background: rgba( 255,0,0,0.2 );
+	background: rgba( 77, 77, 255, 0.2 );
 	padding: 2.5px 5px;
 	font-size: 7px;
 	line-height: 10px;
